@@ -1,0 +1,15 @@
+server: # 本地服务信息，主要用于配置RPC调用的主调信息等
+  app: TestApp  # 应用名
+  server: TestServer  # 服务名
+  local_ip: 127.0.0.1 # 本地IP地址
+
+client: # 客户端配置
+  service:
+    - name: com.tencent.aimedia.AICutAPI # 服务名
+      interface: com.tencent.aimedia.AICutAPI  # 服务接口
+      naming_url: ip://124.222.131.95:80  # 远程服务地址，这里指通过ip+port的方式访问
+      network: tcp                      # 网络协议，如tcp或udp
+      protocol: http                    # 通信协议，默认trpc
+      serialization: json                 # 序列化方式，默认pb
+      transport: jetty                  # 通信框架，默认netty
+  

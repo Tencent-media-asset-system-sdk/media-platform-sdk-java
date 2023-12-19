@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+import "common.proto";
+
+package trpc.media.mediacrop;
+
+option go_package = "git.code.oa.com/yt-media-ai-videounderstanding/yt-ai-media-middle-platform-api/protobuf-spec/mediacrop";
+
+option java_package = "com.tencent.aimedia";  // 设定桩代码文件的java package
+option java_outer_classname = "MediaCropProtocol";
+
+message CustomerStorageParam {
+	string MediaName = 1;
+	trpc.media.common.DomainGroupType DomainGroupType = 2;
+}
+
+message CropConversionParam {
+	string StartTime = 1;
+	string EndTime = 2;
+	CustomerStorageParam CustomerStorageParam = 3;
+}

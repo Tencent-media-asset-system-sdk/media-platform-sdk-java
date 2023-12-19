@@ -1,0 +1,26 @@
+syntax = "proto3";
+package trpc.media.shotmatch;
+option go_package = "git.code.oa.com/yt-media-ai-videounderstanding/yt-ai-media-middle-platform-api/protobuf-spec/shotmatch";
+
+option java_package = "com.tencent.aimedia";  // 设定桩代码文件的java package
+option java_outer_classname = "ShotmatchProtocol";
+
+/*
+message ShotMatchParameter {
+  repeated string SentenceSet = 1;
+  SummaryInfo Summary = 2;
+  repeated float TTSDurationSet = 3;
+  repeated ShotInfo ShotSet = 4;
+  // repeated TagInfo TagSet = 5;
+}
+*/
+
+message ShotMatchInfo {
+  repeated float ScoreSet = 1;
+}
+
+message ShotMatchTaskData {
+  repeated ShotMatchInfo MatchSet = 1;
+}
+
+

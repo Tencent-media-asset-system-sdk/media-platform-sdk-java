@@ -1,0 +1,21 @@
+syntax = "proto3";
+package trpc.media.videocut;
+option go_package = "git.code.oa.com/yt-media-ai-videounderstanding/yt-ai-media-middle-platform-api/protobuf-spec/videocut";
+
+option java_package = "com.tencent.aimedia";  // 设定桩代码文件的java package
+option java_outer_classname = "VideoCutProtocol";
+
+message VideoCutTaskData {
+  int32  VideocutSize = 4;
+  repeated VideoCutItem VideocutItems = 5;
+}
+
+message VideoCutItem {
+  string VideocutType = 1; // 切片类型
+  int32 HeadIndex = 2;     // 镜头起始帧
+  int32 TailIndex = 3;     // 镜头终止帧
+  float StartTime = 4;     // 镜头起始时间
+  float EndTime = 5;       // 镜头终止时间
+}
+
+
