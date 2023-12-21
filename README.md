@@ -22,9 +22,9 @@ sdk 封装了上传文件的流程，一个方法可以完成上传
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import AIMediaProxyClient;
-import TIFileManagerAPI;
-import TICertificate;
+import com.tencent.aimedia.AIMediaProxyClient;
+import com.tencent.aimedia.TIFileManagerAPI;
+import com.tencent.aimedia.TICertificate;
 
 // 创建文件管理代理 proxy
 TIFileManagerAPI proxy = AIMediaProxyClient.newProxyClient(TIFileManagerAPI.class);
@@ -56,11 +56,11 @@ proxy.uploadBuf(cert, buf, filename, threads);
 ### 业务API
 以媒资管理为例
 ```java
-import MediaAPI;
-import AIMediaProxyClient;
-import CommonProtocol;
-import TICertificate;
-import MediaProtocol;
+import com.tencent.aimedia.MediaAPI;
+import com.tencent.aimedia.AIMediaProxyClient;
+import com.tencent.aimedia.CommonProtocol;
+import com.tencent.aimedia.TICertificate;
+import com.tencent.aimedia.MediaProtocol;
 
 String host = "host";
 int port = 80;
