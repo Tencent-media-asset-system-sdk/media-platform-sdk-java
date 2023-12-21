@@ -22,9 +22,9 @@ sdk 封装了上传文件的流程，一个方法可以完成上传
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import com.tencent.aimedia.AIMediaProxyClient;
-import com.tencent.aimedia.TIFileManagerAPI;
-import com.tencent.aimedia.TICertificate;
+import AIMediaProxyClient;
+import TIFileManagerAPI;
+import TICertificate;
 
 // 创建文件管理代理 proxy
 TIFileManagerAPI proxy = AIMediaProxyClient.newProxyClient(TIFileManagerAPI.class);
@@ -56,11 +56,11 @@ proxy.uploadBuf(cert, buf, filename, threads);
 ### 业务API
 以媒资管理为例
 ```java
-import com.tencent.aimedia.MediaAPI;
-import com.tencent.aimedia.AIMediaProxyClient;
-import com.tencent.aimedia.CommonProtocol;
-import com.tencent.aimedia.TICertificate;
-import com.tencent.aimedia.MediaProtocol;
+import MediaAPI;
+import AIMediaProxyClient;
+import CommonProtocol;
+import TICertificate;
+import MediaProtocol;
 
 String host = "host";
 int port = 80;
@@ -100,21 +100,21 @@ System.out.printf("tRPC Call! request={%s} . response={%s}", request.toString(),
 
 ## 模块 proxy protocol 汇总
 每个业务模块对应一个 XXXXAPI interface，用该 API 创建 pxoxy，proxy 下方法会对应接口文档中每个 api 接口。同时还有一个对应的 XXXProtocol class，有对应模块的输入输出协议的 class。
-|模块        |API|Protocol|
-|----------------|---------|---------|
-|公共模块|无|com.tencent.aimedia.CommonProtocol|
-|文件管理模块|com.tencent.aimedia.TIFileManagerAPI|无|
-|资源管理模块|com.tencent.aimedia.MediaAPI|com.tencent.aimedia.MediaProtocol|
-|任务管理模块|com.tencent.aimedia.TaskAPI|com.tencent.aimedia.TaskProtocol
-|智能标签|com.tencent.aimedia.AITagAPI|com.tencent.aimedia.VideoStructureProtocol|
-|智能拆条|com.tencent.aimedia.AICutAPI|com.tencent.aimedia.VideoStructureProtocol|
-|智能编目|com.tencent.aimedia.AICatalogAPI|com.tencent.aimedia.VideoStructureProtocol|
-|人脸集锦|com.tencent.aimedia.PersonRetrievalAPI|com.tencent.aimedia.PersonretrievalProtocol|
-|自定义人脸库|com.tencent.aimedia.UserDefinePersonAPI|com.tencent.aimedia.PersonUserDefineProtocol|
-|自定义标签|com.tencent.aimedia.CustomFeatureAPI|com.tencent.aimedia.CustomFeatureProtocol|
+|模块|API|Protocol|
+|---------|---------|---------|
+|公共模块|无|CommonProtocol|
+|文件管理模块|TIFileManagerAPI|无|
+|资源管理模块|MediaAPI|MediaProtocol|
+|任务管理模块|TaskAPI|TaskProtocol
+|智能标签|AITagAPI|VideoStructureProtocol|
+|智能拆条|AICutAPI|VideoStructureProtocol|
+|智能编目|AICatalogAPI|VideoStructureProtocol|
+|人脸集锦|PersonRetrievalAPI|PersonretrievalProtocol|
+|自定义人脸库|UserDefinePersonAPI|PersonUserDefineProtocol|
+|自定义标签|CustomFeatureAPI|CustomFeatureProtocol|
 |内容中台检索模块|同资源管理|同资源管理|
-|内容中台工具箱模块|com.tencent.aimedia.ToolkitAPI|com.tencent.aimedia.ToolkitProtocol|
-|视频处理|com.tencent.aimedia.YTVideoProcessAPI|com.tencent.aimedia.YTVideoProcessProtocol|
-|视频质检|com.tencent.aimedia.VideoQualityEvaluationAPI|com.tencent.aimedia.VideoQualityEvaluationProtocol|
-|视频擦除标题字幕|com.tencent.aimedia.RemoveCaptionAPI|com.tencent.aimedia.VideoEraseProtocol|
-|视频擦除logo|com.tencent.aimedia.RemoveLogoAPI|com.tencent.aimedia.VideoEraseProtocol|
+|内容中台工具箱模块|ToolkitAPI|ToolkitProtocol|
+|视频处理|YTVideoProcessAPI|YTVideoProcessProtocol|
+|视频质检|VideoQualityEvaluationAPI|VideoQualityEvaluationProtocol|
+|视频擦除标题字幕|RemoveCaptionAPI|VideoEraseProtocol|
+|视频擦除logo|RemoveLogoAPI|VideoEraseProtocol|
