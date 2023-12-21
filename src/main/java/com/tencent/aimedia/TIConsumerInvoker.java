@@ -87,7 +87,7 @@ public class TIConsumerInvoker<T> implements ConsumerInvoker<T>  {
         }
     }
 
-    protected String encodeToJson(Request request, int businessId, int projectId) {
+    protected String encodeToJson(Request request, long businessId, long projectId) {
         RpcInvocation invocation = request.getInvocation();
         Object[] arguments = invocation.getArguments();
         if (arguments == null || arguments.length <= 0) {
@@ -130,10 +130,10 @@ public class TIConsumerInvoker<T> implements ConsumerInvoker<T>  {
 		String httpMethod = "POST";
 		TICertificate cert = (TICertificate) (request.getContext());
 		String host = cert.getHost();
+		int port = cert.getPort();
 		String secretId = cert.getSecretId();
 		String secretKey = cert.getSecretKey();
 		String body = encodeToJson(request, cert.getTIBusinessId(), cert.getTIProjectId());
-		System.out.println(body);
 		TiSign ts = new TiSign(host, action, version, service, contentType, httpMethod, secretId, secretKey);
 		HashMap<String, String> httpHeaderMap = new HashMap<String, String>();
 		try {
@@ -141,7 +141,8 @@ public class TIConsumerInvoker<T> implements ConsumerInvoker<T>  {
 		} catch (Exception e) {
 		}
 		try {
-			String response = HttpClientUtil.doPost(httpHeaderMap, "http://" + host + "/" + gateway, body);
+			String url = "http://" + host + ":" + port + "/" + gateway;
+			String response = HttpClientUtil.doPost(httpHeaderMap,url , body);
 			Object value = decodeFromJson(request.getInvocation().getRpcMethodInfo().getActualReturnType(), response);
 			return CompletableFuture.completedFuture(RpcUtils.newResponse(request, value, null));
 		} catch (HttpException e) {

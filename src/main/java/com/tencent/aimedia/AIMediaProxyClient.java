@@ -50,8 +50,9 @@ public class AIMediaProxyClient {
 	}
 	
 	public static <T> T newProxyClient(Class<T> clazz) {
-//		TRpcSystemProperties.setProperties(TRpcSystemProperties.CONFIG_PATH,
-//				"config.yaml");
+		if (clazz == TIFileManagerAPI.class) {
+			return (T) new TIFileManagerAPI();
+		}
 		Map<String, Object> yaml = new HashMap<String, Object>();
 		Map<String, Object> server = new HashMap<String, Object>();
 		Map<String, Object> client = new HashMap<String, Object>();

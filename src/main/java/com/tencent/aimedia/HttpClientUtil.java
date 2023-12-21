@@ -9,6 +9,7 @@ import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -91,6 +92,8 @@ public class HttpClientUtil {
 
 	public static String doPut(HashMap<String, String> header, String url, byte[] buffer)
 			throws HttpException, IOException {
+
+		
 		// 1.生成HttpClient对象并设置参数
 		HttpClient httpClient = new HttpClient();
 		// 设置 HTTP 连接超时为30分钟

@@ -11,11 +11,11 @@ public class TICertificate extends RpcClientContext {
 	
 	private String secretKey;
 	
-	private int tIBusinessId;
+	private long tIBusinessId;
 	
-	private int tIProjectId;
+	private long tIProjectId;
 	
-	public TICertificate(String host, int port, String secretId, String secretKey, int businessId, int projectid) {
+	public TICertificate(String host, int port, String secretId, String secretKey, long businessId, long projectid) {
 		if (port == 0) {
 			port = 80;
 		}
@@ -33,6 +33,10 @@ public class TICertificate extends RpcClientContext {
     	return new TICertificate(this.host, this.port, this.secretId, this.secretKey, this.tIBusinessId, this.tIProjectId);
         
     }
+	
+	public int getPort() {
+		return port;
+	}
 	
 	public String getHost() {
 		return host;
@@ -60,13 +64,13 @@ public class TICertificate extends RpcClientContext {
 	public void setSecretKey(String secretKey) {
 		this.secretKey = secretKey;
 	}
-	public int getTIBusinessId() {
+	public long getTIBusinessId() {
 		return tIBusinessId;
 	}
 	public void setTIBusinessId(int tIBusinessId) {
 		this.tIBusinessId = tIBusinessId;
 	}
-	public int getTIProjectId() {
+	public long getTIProjectId() {
 		return tIProjectId;
 	}
 	public void setTIProjectId(int tIProjectId) {
