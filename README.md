@@ -1,7 +1,7 @@
 # media-platform-sdk-java
 使用此 sdk 快速对接腾讯媒体AI中台。
 ## USAGE(基于 mavan)
-1. 下载 release 里面的 jar 包。
+1. 下载 release 里面的 [jar包](https://github.com/Tencent-media-asset-system-sdk/media-platform-sdk-java/releases/download/3.3.0/media-platform-java-sdk-v3.3.jar)。
 2. 安装到本地 mavan 仓库，执行
    ```shell
    mvn install:install-file -Dfile=/path/to/media-platform-java-sdk-v3.3.jar -DgroupId=media-platform-sdk-java -DartifactId=media-platform-sdk-java -Dversion=0.0.1-SNAPSHOT -Dpackaging=jar
@@ -45,6 +45,7 @@ System.out.printf("file key %s", key);
 
 同时还支持 buf 上传，下载到文件，下载到内存。
 ```java
+// 下载到文件
 proxy.downLoadToFile(cert, url, filedir, filename);
 // 下载到内存
 byte[] buf = proxy.downLoadToBuf(cert, url);
@@ -90,17 +91,17 @@ MediaProtocol.CreateMediasRequest request = MediaProtocol.CreateMediasRequest.ne
   setMediaUnionInfoSet(0, union).build();
 
 // 创建签名认证需要的信息
-  TICertificate cert = new TICertificate(host, port, secretId, secretKey, businessid, projectid);
-  
-  // 调用 CreateMedias 接口
-  MediaProtocol.CreateMediasResponse result = proxy.createMedias(cert, request);
-  System.out.printf("tRPC Call! request={%s} . response={%s}", request.toString(), result.toString());
+TICertificate cert = new TICertificate(host, port, secretId, secretKey, businessid, projectid);
+
+// 调用 CreateMedias 接口
+MediaProtocol.CreateMediasResponse result = proxy.createMedias(cert, request);
+System.out.printf("tRPC Call! request={%s} . response={%s}", request.toString(), result.toString());
 ```
 
 ## 模块 proxy protocol 汇总
 每个业务模块对应一个 XXXXAPI interface，用该 API 创建 pxoxy，proxy 下方法会对应接口文档中每个 api 接口。同时还有一个对应的 XXXProtocol class，有对应模块的输入输出协议的 class。
 |模块        |API|Protocol|
-|---------|---------|---------|
+|----------------|---------|---------|
 |公共模块|无|com.tencent.aimedia.CommonProtocol|
 |文件管理模块|com.tencent.aimedia.TIFileManagerAPI|无|
 |资源管理模块|com.tencent.aimedia.MediaAPI|com.tencent.aimedia.MediaProtocol|
