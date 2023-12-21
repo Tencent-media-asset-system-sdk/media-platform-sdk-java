@@ -99,7 +99,7 @@ MediaProtocol.CreateMediasRequest request = MediaProtocol.CreateMediasRequest.ne
 
 ## 模块 proxy protocol 汇总
 每个业务模块对应一个 XXXXAPI interface，用该 API 创建 pxoxy，proxy 下方法会对应接口文档中每个 api 接口。同时还有一个对应的 XXXProtocol class，有对应模块的输入输出协议的 class。
-|模块|API|Protocol|
+|模块        |API|Protocol|
 |---------|---------|---------|
 |公共模块|无|com.tencent.aimedia.CommonProtocol|
 |文件管理模块|com.tencent.aimedia.TIFileManagerAPI|无|
