@@ -33,8 +33,8 @@ String host = "host";
 int port = 80;
 String secretId = "secret_id";
 String secretKey = "secret_key";
-int businessid = 1;
-int projectid = 1;
+long businessid = 1;
+long projectid = 1;
 int threads = 4; // 并行上传最大线程数量，上传过程占用最大内存 2 * threads * 8M
 // 创建签名认证需要的信息
 TICertificate cert = new TICertificate(host, port, secretId, secretKey, businessid, projectid);
@@ -66,8 +66,8 @@ String host = "host";
 int port = 80;
 String secretId = "secret_id";
 String secretKey = "secret_key";
-int businessid = 1;
-int projectid = 1;
+long businessid = 1;
+long projectid = 1;
 // 创建媒资管理代理 proxy
 MediaAPI proxy = AIMediaProxyClient.newProxyClient(MediaAPI.class);
 
