@@ -1,5 +1,5 @@
 # media-platform-sdk-java
-使用此 sdk 快速对接腾讯媒体AI中台。
+使用此 sdk 快速对接腾讯媒体AI中台。java 版本需要 >= 1.8。
 ## USAGE(基于 mavan)
 1. 下载 release 里面的 [jar包](https://github.com/Tencent-media-asset-system-sdk/media-platform-sdk-java/releases/download/3.3.0/media-platform-java-sdk-v3.3.jar)。
 2. 安装到本地 mavan 仓库，执行
