@@ -15,7 +15,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -35,6 +37,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.netty.util.concurrent.ScheduledFuture;
 
 public class TIFileManagerAPI {
 	
@@ -205,6 +209,68 @@ public class TIFileManagerAPI {
 		checkResponseError(response);
 	}
 	
+	private String completeMultipartUploadAsync(TICertificate cert, String key, String uploadId)
+			throws IOException, RuntimeException, ResponseErrorException {
+		String action = "CompleteMultipartUploadAsync";
+		String service = "fusion-media-service";
+		String version = "2022-03-02";
+		String contentType = "application/octet-stream";
+		String httpMethod = "POST";
+		String secretId = cert.getSecretId();
+		String secretKey = cert.getSecretKey();
+		String host = cert.getHost();
+		int port = cert.getPort();
+		TiSign ts = new TiSign(host, action, version, service, contentType, httpMethod, secretId, secretKey);
+		HashMap<String, String> httpHeaderMap = new HashMap<String, String>();
+		try {
+			ts.CreateHeaderWithSignature(httpHeaderMap);
+		} catch (Exception e) {
+			throw new IOException("生成签名错误: " + e.toString());
+		}
+		Map<String, Object> body = new HashMap<String, Object>();
+		body.put("CompleteMultipartUpload", null);
+		String input = JSON.toString(body);
+		String url = "http://" + host + ":" + port +  "/FileManager/CompleteMultipartUploadAsync?useJson=true&Bucket=&Key=" +
+				URLEncoder.encode(key, "UTF-8") + "&uploadId=" + uploadId;
+		String response = HttpClientUtil.doPost(httpHeaderMap, url, input);
+		JsonNode rootNode = checkResponseError(response);
+		if (rootNode.get("TaskId").isNull()) {
+			throw new ResponseErrorException("ProtocolError", rootNode.toString(), rootNode.get("RequestId").asText());
+		}
+		return rootNode.get("TaskId").asText();
+	}
+	
+	private String[] DescribeAsyncTask(TICertificate cert, String taskId)
+			throws IOException, RuntimeException, ResponseErrorException {
+		String action = "DescribeAsyncTask";
+		String service = "fusion-media-service";
+		String version = "2022-03-02";
+		String contentType = "application/json";
+		String httpMethod = "POST";
+		String secretId = cert.getSecretId();
+		String secretKey = cert.getSecretKey();
+		String host = cert.getHost();
+		int port = cert.getPort();
+		TiSign ts = new TiSign(host, action, version, service, contentType, httpMethod, secretId, secretKey);
+		HashMap<String, String> httpHeaderMap = new HashMap<String, String>();
+		try {
+			ts.CreateHeaderWithSignature(httpHeaderMap);
+		} catch (Exception e) {
+			throw new IOException("生成签名错误: " + e.toString());
+		}
+		Map<String, Object> body = new HashMap<String, Object>();
+		String input = JSON.toString(body);
+		String url = "http://" + host + ":" + port +  "/FileManager/DescribeAsyncTask?useJson=true&TaskId=" + taskId;
+		String response = HttpClientUtil.doPost(httpHeaderMap, url, input);
+		JsonNode rootNode = checkResponseError(response);
+		
+		if (rootNode.get("DescribeAsyncTaskResult").isNull()) {
+			throw new ResponseErrorException("ProtocolError", rootNode.toString(), rootNode.get("RequestId").asText());
+		}
+		return new String[]{rootNode.get("DescribeAsyncTaskResult").get("Status").asText(),
+			rootNode.get("DescribeAsyncTaskResult").get("Message").asText()};
+	}
+	
 	private void putObject(TICertificate cert, String key, String bucket, byte[] filebuf)
 			throws IOException, RuntimeException, ResponseErrorException {
 		String action = "PutObject";
@@ -358,13 +424,55 @@ public class TIFileManagerAPI {
 			for (int i = 0; i < threads; i++) {
 				semp.acquire();
 			}
+			exec.shutdown();
 			if (exception[0] != null) {
 				throw exception[0];
 			}
 			
-			this.completeMultipartUpload(cert, key, uploadId);
+			String taskId = this.completeMultipartUploadAsync(cert, key, uploadId);
+			
+			// 定制任务轮询文件合并任务的状态
+			ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+			String failedReson[] = {""};
+			int failedCnt[] = {50};
+			Runnable task = () -> {
+				String res[];
+				try {
+					res = this.DescribeAsyncTask(cert, taskId);
+					if (res[0].equals("FINISHED")) {
+						executor.shutdown();
+					} else if (res[0].equals("FAILED") || res[0].equals("ABNORMAL")) {
+						failedReson[0] = String.format("upload %s: %s", res[0], res[1]);
+						executor.shutdown();
+		            }
+				} catch (Exception e) {
+					failedCnt[0]--;
+					if (failedCnt[0] == 0) {
+						failedReson[0] = "uploadBigFile.DescribeAsyncTask too many error: " + e.toString();
+						executor.shutdown();	
+					}
+				}
+	        };
+	        // 按照 100m/s, 预估合并用时
+	    	int expectedSeconds = (int) (filelength/1000000000);
+	    	if (expectedSeconds == 0) {
+	    		expectedSeconds = 1;
+	    	}
+	    	if (expectedSeconds > 10) {
+	    		expectedSeconds = 10;
+	    	}
+	        java.util.concurrent.ScheduledFuture<?> future = executor.scheduleAtFixedRate(task, 
+	        		expectedSeconds, expectedSeconds, TimeUnit.SECONDS);
+	        // 等待 future 完成
+	        try {
+	        	executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+	        } catch (Exception e) {
+//	            e.printStackTrace();
+	        }
+	        if (failedReson[0] != "") {
+	        	throw new IOException("文件上传失败，原因: " + failedReson[0]);
+	        }
 		}
-		
 		
 		
 		return key;
@@ -450,6 +558,7 @@ public class TIFileManagerAPI {
 			for (int i = 0; i < threads; i++) {
 				semp.acquire();
 			}
+			exec.shutdown();
 			if (exception[0] != null) {
 				throw exception[0];
 			}
