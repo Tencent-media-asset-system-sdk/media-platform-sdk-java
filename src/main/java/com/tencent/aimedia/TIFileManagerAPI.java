@@ -111,7 +111,7 @@ public class TIFileManagerAPI {
 		Map<String, Object> body = new HashMap<String, Object>();
 		body.put("FileKeys", new String[]{key});
 		body.put("Async", false);
-		String url = "https://" + host + "/FileManager/CreateDeleteFileTask";
+		String url = "http://" + host + "/FileManager/CreateDeleteFileTask";
 		String input = JSON.toString(body);
 		String response = HttpClientUtil.doPost(httpHeaderMap, url, input);
 		JsonNode rootNode = checkResponseError(response);
@@ -146,7 +146,7 @@ public class TIFileManagerAPI {
 		//	describeUploadKey.put("Content-MD5", "5d358bbddaab8c378f4873863ec47770");
 		body.put("DescribeUploadKey", describeUploadKey);
 		String input = JSON.toString(body);
-		String url = "https://" + host + "/FileManager/DescribeUploadKey?useJson=true";
+		String url = "http://" + host + "/FileManager/DescribeUploadKey?useJson=true";
 		String response = HttpClientUtil.doPost(httpHeaderMap, url, input);
 		JsonNode rootNode = checkResponseError(response);
 		return rootNode.get("Key").asText();
@@ -172,7 +172,7 @@ public class TIFileManagerAPI {
 			throw new IOException("生成签名错误: " + e.toString());
 		}
 
-		String url = "https://" + host + "/FileManager/CreateMultipartUpload?useJson=true&Bucket=&Key=" +
+		String url = "http://" + host + "/FileManager/CreateMultipartUpload?useJson=true&Bucket=&Key=" +
 				URLEncoder.encode(key, "UTF-8");
 		String response = HttpClientUtil.doPost(httpHeaderMap, url, "");
 		JsonNode rootNode = checkResponseError(response);
@@ -203,7 +203,7 @@ public class TIFileManagerAPI {
 		Map<String, Object> body = new HashMap<String, Object>();
 		body.put("CompleteMultipartUpload", null);
 		String input = JSON.toString(body);
-		String url = "https://" + host + "/FileManager/CompleteMultipartUpload?useJson=true&Bucket=&Key=" +
+		String url = "http://" + host + "/FileManager/CompleteMultipartUpload?useJson=true&Bucket=&Key=" +
 				URLEncoder.encode(key, "UTF-8") + "&uploadId=" + uploadId;
 		String response = HttpClientUtil.doPost(httpHeaderMap, url, input);
 		checkResponseError(response);
@@ -230,7 +230,7 @@ public class TIFileManagerAPI {
 		Map<String, Object> body = new HashMap<String, Object>();
 		body.put("CompleteMultipartUpload", null);
 		String input = JSON.toString(body);
-		String url = "https://" + host + "/FileManager/CompleteMultipartUploadAsync?useJson=true&Bucket=&Key=" +
+		String url = "http://" + host + "/FileManager/CompleteMultipartUploadAsync?useJson=true&Bucket=&Key=" +
 				URLEncoder.encode(key, "UTF-8") + "&uploadId=" + uploadId;
 		String response = HttpClientUtil.doPost(httpHeaderMap, url, input);
 		JsonNode rootNode = checkResponseError(response);
@@ -260,7 +260,7 @@ public class TIFileManagerAPI {
 		}
 		Map<String, Object> body = new HashMap<String, Object>();
 		String input = JSON.toString(body);
-		String url = "https://" + host + "/FileManager/DescribeAsyncTask?useJson=true&TaskId=" + taskId;
+		String url = "http://" + host + "/FileManager/DescribeAsyncTask?useJson=true&TaskId=" + taskId;
 		String response = HttpClientUtil.doPost(httpHeaderMap, url, input);
 		JsonNode rootNode = checkResponseError(response);
 		
@@ -290,7 +290,7 @@ public class TIFileManagerAPI {
 		}
 		String md5sum = calcMD5(filebuf);
 		String canonicalQueryString = "useJson=true&Bucket=" + bucket + "&Key=" + URLEncoder.encode(key, "UTF-8") + "&Content-MD5=" + md5sum;
-		String url = "https://" + host + "/FileManager/PutObject?" + canonicalQueryString;
+		String url = "http://" + host + "/FileManager/PutObject?" + canonicalQueryString;
 		String response = HttpClientUtil.doPut(httpHeaderMap, url, filebuf);
 		
 		checkResponseError(response);
@@ -318,7 +318,7 @@ public class TIFileManagerAPI {
 		String md5sum = calcMD5(filebuf);
 		String canonicalQueryString = "useJson=true&Bucket=" + bucket + "&Key=" + URLEncoder.encode(key, "UTF-8")
 				+ "&uploadId=" + uploadId + "&partNumber=" + partNumber + "&Content-MD5=" + md5sum;
-		String url = "https://" + host + "/FileManager/UploadPart?" + canonicalQueryString;
+		String url = "http://" + host + "/FileManager/UploadPart?" + canonicalQueryString;
 		String response = HttpClientUtil.doPut(httpHeaderMap, url, filebuf);
 		checkResponseError(response);
 	}
@@ -584,7 +584,7 @@ public class TIFileManagerAPI {
 		} catch (Exception e) {
 			throw new IOException("生成签名错误: " + e.toString());
 		}
-		return HttpClientUtil.doGet(httpHeaderMap, "https://" + host + ":" + port + "/" + url).getResponseBody();
+		return HttpClientUtil.doGet(httpHeaderMap, "http://" + host + ":" + port + "/" + url).getResponseBody();
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -611,7 +611,7 @@ public class TIFileManagerAPI {
 		}
 		CloseableHttpClient httpclient = HttpClients.custom().setRedirectStrategy(new LaxRedirectStrategy()).build();
 		try {
-			HttpGet httpget = new HttpGet("https://" + host + ":" + port + "/" + url);
+			HttpGet httpget = new HttpGet("http://" + host + ":" + port + "/" + url);
 			// 设置 header
 			Iterator<HashMap.Entry<String, String>> iterable = httpHeaderMap.entrySet().iterator();
 			while (iterable.hasNext()) {
