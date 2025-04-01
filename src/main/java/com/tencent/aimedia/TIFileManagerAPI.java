@@ -100,7 +100,7 @@ public class TIFileManagerAPI {
 		String secretId = cert.getSecretId();
 		String secretKey = cert.getSecretKey();
 		String host = cert.getHost();
-		int port = cert.getPort();
+		// int port = cert.getPort();
 		TiSign ts = new TiSign(host, action, version, service, contentType, httpMethod, secretId, secretKey);
 		HashMap<String, String> httpHeaderMap = new HashMap<String, String>();
 		try {
@@ -111,7 +111,7 @@ public class TIFileManagerAPI {
 		Map<String, Object> body = new HashMap<String, Object>();
 		body.put("FileKeys", new String[]{key});
 		body.put("Async", false);
-		String url = "http://" + host + ":" + port + "/FileManager/CreateDeleteFileTask";
+		String url = "https://" + host + "/FileManager/CreateDeleteFileTask";
 		String input = JSON.toString(body);
 		String response = HttpClientUtil.doPost(httpHeaderMap, url, input);
 		JsonNode rootNode = checkResponseError(response);
@@ -124,14 +124,14 @@ public class TIFileManagerAPI {
 	private String describeUploadKey(TICertificate cert, String name, long fileSize)
 			throws IOException, RuntimeException, ResponseErrorException {
 		String action = "DescribeUploadKey";
-		String service = "fusion-media-service";
-		String version = "2022-03-02";
-		String contentType = "application/octet-stream";
+		String service = "ti-file-manager";
+		String version = "2021-06-06";
+		String contentType = "application/json";
 		String httpMethod = "POST";
 		String secretId = cert.getSecretId();
 		String secretKey = cert.getSecretKey();
 		String host = cert.getHost();
-		int port = cert.getPort();
+		//	int port = cert.getPort();
 		TiSign ts = new TiSign(host, action, version, service, contentType, httpMethod, secretId, secretKey);
 		HashMap<String, String> httpHeaderMap = new HashMap<String, String>();
 		try {
@@ -143,10 +143,10 @@ public class TIFileManagerAPI {
 		Map<String, Object> describeUploadKey = new HashMap<String, Object>();
 		describeUploadKey.put("FileName", name);
 		describeUploadKey.put("Size", Long.toString(fileSize));
+		//	describeUploadKey.put("Content-MD5", "5d358bbddaab8c378f4873863ec47770");
 		body.put("DescribeUploadKey", describeUploadKey);
-		
-		String url = "http://" + host + ":" + port + "/FileManager/DescribeUploadKey?useJson=true";
 		String input = JSON.toString(body);
+		String url = "https://" + host + "/FileManager/DescribeUploadKey?useJson=true";
 		String response = HttpClientUtil.doPost(httpHeaderMap, url, input);
 		JsonNode rootNode = checkResponseError(response);
 		return rootNode.get("Key").asText();
@@ -156,14 +156,14 @@ public class TIFileManagerAPI {
 	private String createMultipartUpload(TICertificate cert, String key)
 			throws IOException, RuntimeException, ResponseErrorException {
 		String action = "CreateMultipartUpload";
-		String service = "fusion-media-service";
-		String version = "2022-03-02";
-		String contentType = "application/octet-stream";
+		String service = "ti-file-manager";
+		String version = "2021-06-06";
+		String contentType = "application/json";
 		String httpMethod = "POST";
 		String secretId = cert.getSecretId();
 		String secretKey = cert.getSecretKey();
 		String host = cert.getHost();
-		int port = cert.getPort();
+		// int port = cert.getPort();
 		TiSign ts = new TiSign(host, action, version, service, contentType, httpMethod, secretId, secretKey);
 		HashMap<String, String> httpHeaderMap = new HashMap<String, String>();
 		try {
@@ -171,8 +171,8 @@ public class TIFileManagerAPI {
 		} catch (Exception e) {
 			throw new IOException("生成签名错误: " + e.toString());
 		}
-		
-		String url = "http://" + host + ":" + port + "/FileManager/CreateMultipartUpload?useJson=true&Bucket=&Key=" +
+
+		String url = "https://" + host + "/FileManager/CreateMultipartUpload?useJson=true&Bucket=&Key=" +
 				URLEncoder.encode(key, "UTF-8");
 		String response = HttpClientUtil.doPost(httpHeaderMap, url, "");
 		JsonNode rootNode = checkResponseError(response);
@@ -185,14 +185,14 @@ public class TIFileManagerAPI {
 	private void completeMultipartUpload(TICertificate cert, String key, String uploadId)
 			throws IOException, RuntimeException, ResponseErrorException {
 		String action = "CompleteMultipartUpload";
-		String service = "fusion-media-service";
-		String version = "2022-03-02";
-		String contentType = "application/octet-stream";
+		String service = "ti-file-manager";
+		String version = "2021-06-06";
+		String contentType = "application/json";
 		String httpMethod = "POST";
 		String secretId = cert.getSecretId();
 		String secretKey = cert.getSecretKey();
 		String host = cert.getHost();
-		int port = cert.getPort();
+		// int port = cert.getPort();
 		TiSign ts = new TiSign(host, action, version, service, contentType, httpMethod, secretId, secretKey);
 		HashMap<String, String> httpHeaderMap = new HashMap<String, String>();
 		try {
@@ -203,7 +203,7 @@ public class TIFileManagerAPI {
 		Map<String, Object> body = new HashMap<String, Object>();
 		body.put("CompleteMultipartUpload", null);
 		String input = JSON.toString(body);
-		String url = "http://" + host + ":" + port +  "/FileManager/CompleteMultipartUpload?useJson=true&Bucket=&Key=" +
+		String url = "https://" + host + "/FileManager/CompleteMultipartUpload?useJson=true&Bucket=&Key=" +
 				URLEncoder.encode(key, "UTF-8") + "&uploadId=" + uploadId;
 		String response = HttpClientUtil.doPost(httpHeaderMap, url, input);
 		checkResponseError(response);
@@ -219,7 +219,7 @@ public class TIFileManagerAPI {
 		String secretId = cert.getSecretId();
 		String secretKey = cert.getSecretKey();
 		String host = cert.getHost();
-		int port = cert.getPort();
+		// int port = cert.getPort();
 		TiSign ts = new TiSign(host, action, version, service, contentType, httpMethod, secretId, secretKey);
 		HashMap<String, String> httpHeaderMap = new HashMap<String, String>();
 		try {
@@ -230,7 +230,7 @@ public class TIFileManagerAPI {
 		Map<String, Object> body = new HashMap<String, Object>();
 		body.put("CompleteMultipartUpload", null);
 		String input = JSON.toString(body);
-		String url = "http://" + host + ":" + port +  "/FileManager/CompleteMultipartUploadAsync?useJson=true&Bucket=&Key=" +
+		String url = "https://" + host + "/FileManager/CompleteMultipartUploadAsync?useJson=true&Bucket=&Key=" +
 				URLEncoder.encode(key, "UTF-8") + "&uploadId=" + uploadId;
 		String response = HttpClientUtil.doPost(httpHeaderMap, url, input);
 		JsonNode rootNode = checkResponseError(response);
@@ -250,7 +250,7 @@ public class TIFileManagerAPI {
 		String secretId = cert.getSecretId();
 		String secretKey = cert.getSecretKey();
 		String host = cert.getHost();
-		int port = cert.getPort();
+		// int port = cert.getPort();
 		TiSign ts = new TiSign(host, action, version, service, contentType, httpMethod, secretId, secretKey);
 		HashMap<String, String> httpHeaderMap = new HashMap<String, String>();
 		try {
@@ -260,7 +260,7 @@ public class TIFileManagerAPI {
 		}
 		Map<String, Object> body = new HashMap<String, Object>();
 		String input = JSON.toString(body);
-		String url = "http://" + host + ":" + port +  "/FileManager/DescribeAsyncTask?useJson=true&TaskId=" + taskId;
+		String url = "https://" + host + "/FileManager/DescribeAsyncTask?useJson=true&TaskId=" + taskId;
 		String response = HttpClientUtil.doPost(httpHeaderMap, url, input);
 		JsonNode rootNode = checkResponseError(response);
 		
@@ -290,7 +290,7 @@ public class TIFileManagerAPI {
 		}
 		String md5sum = calcMD5(filebuf);
 		String canonicalQueryString = "useJson=true&Bucket=" + bucket + "&Key=" + URLEncoder.encode(key, "UTF-8") + "&Content-MD5=" + md5sum;
-		String url = "http://" + host + "/FileManager/PutObject?" + canonicalQueryString;
+		String url = "https://" + host + "/FileManager/PutObject?" + canonicalQueryString;
 		String response = HttpClientUtil.doPut(httpHeaderMap, url, filebuf);
 		
 		checkResponseError(response);
@@ -299,14 +299,14 @@ public class TIFileManagerAPI {
 	private void uploadPart(TICertificate cert, String key, String uploadId, String bucket, int partNumber, byte[] filebuf)
 			throws  IOException, RuntimeException, ResponseErrorException {
 		String action = "UploadPart";
-		String service = "fusion-media-service";
-		String version = "2022-03-02";
-		String contentType = "application/octet-stream";
+		String service = "ti-file-manager";
+		String version = "2021-06-06";
+		String contentType = "application/json";
 		String httpMethod = "PUT";
 		String secretId = cert.getSecretId();
 		String secretKey = cert.getSecretKey();
 		String host = cert.getHost();
-		int port = cert.getPort();
+		// int port = cert.getPort();
 		TiSign ts = new TiSign(host, action, version, service, contentType, httpMethod, secretId, secretKey);
 		HashMap<String, String> httpHeaderMap = new HashMap<String, String>();
 		try {
@@ -318,7 +318,7 @@ public class TIFileManagerAPI {
 		String md5sum = calcMD5(filebuf);
 		String canonicalQueryString = "useJson=true&Bucket=" + bucket + "&Key=" + URLEncoder.encode(key, "UTF-8")
 				+ "&uploadId=" + uploadId + "&partNumber=" + partNumber + "&Content-MD5=" + md5sum;
-		String url = "http://" + host + ":" + port + "/FileManager/UploadPart?" + canonicalQueryString;
+		String url = "https://" + host + "/FileManager/UploadPart?" + canonicalQueryString;
 		String response = HttpClientUtil.doPut(httpHeaderMap, url, filebuf);
 		checkResponseError(response);
 	}
@@ -584,7 +584,7 @@ public class TIFileManagerAPI {
 		} catch (Exception e) {
 			throw new IOException("生成签名错误: " + e.toString());
 		}
-		return HttpClientUtil.doGet(httpHeaderMap, "http://" + host + ":" + port + "/" + url).getResponseBody();
+		return HttpClientUtil.doGet(httpHeaderMap, "https://" + host + ":" + port + "/" + url).getResponseBody();
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -611,7 +611,7 @@ public class TIFileManagerAPI {
 		}
 		CloseableHttpClient httpclient = HttpClients.custom().setRedirectStrategy(new LaxRedirectStrategy()).build();
 		try {
-			HttpGet httpget = new HttpGet("http://" + host + ":" + port + "/" + url);
+			HttpGet httpget = new HttpGet("https://" + host + ":" + port + "/" + url);
 			// 设置 header
 			Iterator<HashMap.Entry<String, String>> iterable = httpHeaderMap.entrySet().iterator();
 			while (iterable.hasNext()) {

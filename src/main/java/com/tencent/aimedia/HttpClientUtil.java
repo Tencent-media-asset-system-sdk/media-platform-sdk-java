@@ -73,7 +73,7 @@ public class HttpClientUtil {
 		postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());
 
 		postMethod.addRequestHeader("accept", "*/*");
-		postMethod.addRequestHeader("connection", "Keep-Alive");
+		//	postMethod.addRequestHeader("connection", "Keep-Alive");
 		
 		// 设置请求参数
 		postMethod.setRequestEntity(new StringRequestEntity(body, null, null));
